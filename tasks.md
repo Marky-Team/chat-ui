@@ -30,14 +30,9 @@
   - License type: Proprietary Software License
 
 ## Core Features Implementation
-- [ ] Implement server-side context handling
+- [x] Get user details Marky api
   - fetch user details from DynamoDB
   - Load user's name into agent context for personalized greetings
-  - Use business_id to fetch business details from DynamoDB
-  - Load business context for agent awareness
-  - Update agent prompt to:
-    - Greet user by their name
-    - Be aware of business context
 
 ## API and Authentication
 - [ ] Update API endpoints
@@ -52,7 +47,19 @@
 - [ ] Update chat interface
   - Implement Marky's design system
   - Add social media preview components
+    - Facebook post preview
+    - Instagram post/story preview
+    - Twitter/X post preview
+    - LinkedIn post preview
+    - Pinterest pin preview
   - Create post editor interface
+- [ ] Add memory viewer component
+  - Use LangSmith SDK to fetch memories for user's namespace
+  - Display memories in a collapsible sidebar
+  - Add search/filter functionality for memories
+  - Show memory creation date and last accessed time
+  - Allow memory deletion with confirmation
+  - Implement memory content preview
 - [ ] Add analytics dashboard
   - Engagement metrics
   - Post performance
@@ -68,6 +75,15 @@
   - Style with Marky's design system
   - Add persistence for sidebar state
   - Ensure responsive behavior on all screen sizes
+- [ ] Implement Polotno Workspace for template preview
+  - Replace static image preview with interactive Workspace component
+  - Use `<Workspace store={store} />` for rendering
+  - Configure workspace settings:
+    - `renderOnlyActivePage` for single template view
+    - Custom `backgroundColor` and `pageBorderColor`
+    - Set appropriate `paddingX` and `paddingY`
+  - Hide page controls using `components={{ PageControls: () => null }}`
+  - Consider adding basic edit capabilities
 
 
 ## Testing
