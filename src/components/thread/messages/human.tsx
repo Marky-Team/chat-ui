@@ -1,9 +1,9 @@
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import { useStreamContext } from "@/providers/Stream";
 import { Message } from "@langchain/langgraph-sdk";
 import { useState } from "react";
 import { getContentString } from "../utils";
-import { cn } from "@/lib/utils";
-import { Textarea } from "@/components/ui/textarea";
 import { BranchSwitcher, CommandBar } from "./shared";
 
 function EditableContent({
@@ -65,7 +65,7 @@ export function HumanMessage({
             messages: [...(values.messages ?? []), newMessage],
           };
         },
-      },
+        },
     );
   };
 

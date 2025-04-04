@@ -30,7 +30,14 @@
   - License type: Proprietary Software License
 
 ## Core Features Implementation
-
+- [ ] Implement server-side context handling
+  - fetch user details from DynamoDB
+  - Load user's name into agent context for personalized greetings
+  - Use business_id to fetch business details from DynamoDB
+  - Load business context for agent awareness
+  - Update agent prompt to:
+    - Greet user by their name
+    - Be aware of business context
 
 ## API and Authentication
 - [ ] Update API endpoints

@@ -34,6 +34,26 @@ const useTypedStream = useStream<
 type StreamContextType = ReturnType<typeof useTypedStream>;
 const StreamContext = createContext<StreamContextType | undefined>(undefined);
 
+const TokenMissingPopup: React.FC = () => (
+  <div className="flex items-center justify-center min-h-screen w-full p-4">
+    <div className="animate-in fade-in-0 zoom-in-95 flex flex-col border bg-background shadow-lg rounded-lg max-w-3xl">
+      <div className="flex flex-col gap-2 mt-14 p-6 border-b">
+        <div className="flex items-start flex-col gap-2">
+          <MarkyLogoSVG className="h-7" />
+          <h1 className="text-xl font-semibold tracking-tight">
+            Authentication Required
+          </h1>
+        </div>
+        <p className="text-muted-foreground">
+          Please close this page and re-open from Marky to get a valid authentication token.
+          <br />
+          The URL should include a token parameter for authentication.
+        </p>
+      </div>
+    </div>
+  </div>
+);
+
 async function sleep(ms = 4000) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -63,17 +83,31 @@ const StreamSession = ({
   apiKey,
   apiUrl,
   assistantId,
+  businessId,
 }: {
   children: ReactNode;
   apiKey: string | null;
   apiUrl: string;
   assistantId: string;
+  businessId: string;
 }) => {
   const [threadId, setThreadId] = useQueryState("threadId");
+  const [token] = useQueryState("token");
   const { getThreads, setThreads } = useThreads();
+  const [hasInitialized, setHasInitialized] = useState(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
+
+  // Show popup if token is missing
+  if (!token) {
+    return <TokenMissingPopup />;
+  }
+
   const streamValue = useTypedStream({
     apiUrl,
     apiKey: apiKey ?? undefined,
+    defaultHeaders: {
+      "Authorization": `Bearer ${token} ${businessId}`,
+    },
     assistantId,
     threadId: threadId ?? null,
     onCustomEvent: (event, options) => {
@@ -84,11 +118,39 @@ const StreamSession = ({
     },
     onThreadId: (id) => {
       setThreadId(id);
-      // Refetch threads list when thread ID changes.
-      // Wait for some seconds before fetching so we're able to get the new thread that was created.
       sleep().then(() => getThreads().then(setThreads).catch(console.error));
     },
   });
+
+  // Load thread history on mount
+  useEffect(() => {
+    if (threadId) {
+      setIsLoadingHistory(true);
+      getThreads()
+        .then(setThreads)
+        .catch(console.error)
+        .finally(() => setIsLoadingHistory(false));
+    } else {
+      setIsLoadingHistory(false);
+    }
+  }, [threadId, getThreads]);
+
+  // Send automatic hello message when component mounts (only if no existing thread)
+  useEffect(() => {
+    if (!hasInitialized && streamValue.submit && !isLoadingHistory && !threadId) {
+      streamValue.submit(
+        { messages: "hello" },
+        { 
+          streamMode: ["values"],
+          optimisticValues: (prev) => ({
+            ...prev,
+            messages: [...(prev.messages ?? []), { type: "human", content: "hello" }],
+          }),
+        }
+      );
+      setHasInitialized(true);
+    }
+  }, [hasInitialized, streamValue.submit, isLoadingHistory, threadId]);
 
   useEffect(() => {
     checkGraphStatus(apiUrl, apiKey).then((ok) => {
@@ -122,6 +184,7 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
   const apiUrl = import.meta.env.VITE_API_URL;
   const assistantId = import.meta.env.VITE_ASSISTANT_ID;
   const envApiKey = import.meta.env.VITE_LANGSMITH_API_KEY;
+  const businessId = import.meta.env.VITE_BUSINESS_ID;
 
   // For API key, use localStorage with env var fallback
   const [apiKey, _setApiKey] = useState(() => {
@@ -135,7 +198,7 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   // If we're missing any required values, show the form
-  if (!apiUrl || !assistantId) {
+  if (!apiUrl || !assistantId || !businessId) {
     return (
       <div className="flex items-center justify-center min-h-screen w-full p-4">
         <div className="animate-in fade-in-0 zoom-in-95 flex flex-col border bg-background shadow-lg rounded-lg max-w-3xl">
@@ -151,6 +214,7 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
               <ul className="list-disc list-inside mt-2">
                 <li>VITE_API_URL</li>
                 <li>VITE_ASSISTANT_ID</li>
+                <li>VITE_BUSINESS_ID</li>
                 <li>VITE_LANGSMITH_API_KEY (optional)</li>
               </ul>
             </p>
@@ -161,7 +225,12 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
   }
 
   return (
-    <StreamSession apiKey={apiKey} apiUrl={apiUrl} assistantId={assistantId}>
+    <StreamSession 
+      apiKey={apiKey} 
+      apiUrl={apiUrl} 
+      assistantId={assistantId}
+      businessId={businessId}
+    >
       {children}
     </StreamSession>
   );
