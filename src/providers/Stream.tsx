@@ -115,16 +115,12 @@ const StreamSession = ({
   );
 };
 
-// Default values for the form
-const DEFAULT_API_URL = "http://localhost:2024";
-const DEFAULT_ASSISTANT_ID = "agent";
-
 export const StreamProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   // Get environment variables - these should be set in .env
-  const apiUrl = import.meta.env.VITE_API_URL || DEFAULT_API_URL;
-  const assistantId = import.meta.env.VITE_ASSISTANT_ID || DEFAULT_ASSISTANT_ID;
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const assistantId = import.meta.env.VITE_ASSISTANT_ID;
   const envApiKey = import.meta.env.VITE_LANGSMITH_API_KEY;
 
   // For API key, use localStorage with env var fallback
