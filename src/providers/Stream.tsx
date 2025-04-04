@@ -34,7 +34,7 @@ const useTypedStream = useStream<
 type StreamContextType = ReturnType<typeof useTypedStream>;
 const StreamContext = createContext<StreamContextType | undefined>(undefined);
 
-const TokenMissingPopup: React.FC = () => (
+const AuthRequiredPopup: React.FC<{ message: string }> = ({ message }) => (
   <div className="flex items-center justify-center min-h-screen w-full p-4">
     <div className="animate-in fade-in-0 zoom-in-95 flex flex-col border bg-background shadow-lg rounded-lg max-w-3xl">
       <div className="flex flex-col gap-2 mt-14 p-6 border-b">
@@ -45,9 +45,9 @@ const TokenMissingPopup: React.FC = () => (
           </h1>
         </div>
         <p className="text-muted-foreground">
-          Please close this page and re-open from Marky to get a valid authentication token.
+          {message}
           <br />
-          The URL should include a token parameter for authentication.
+          Please close this page and re-open from Marky to get a properly authenticated URL.
         </p>
       </div>
     </div>
@@ -99,7 +99,12 @@ const StreamSession = ({
 
   // Show popup if token is missing
   if (!token) {
-    return <TokenMissingPopup />;
+    return <AuthRequiredPopup message="The URL should include a token parameter for authentication." />;
+  }
+
+  // Show popup if businessId is missing
+  if (!businessId) {
+    return <AuthRequiredPopup message="The URL should include a businessId parameter." />;
   }
 
   const streamValue = useTypedStream({
@@ -184,7 +189,7 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
   const apiUrl = import.meta.env.VITE_API_URL;
   const assistantId = import.meta.env.VITE_ASSISTANT_ID;
   const envApiKey = import.meta.env.VITE_LANGSMITH_API_KEY;
-  const businessId = import.meta.env.VITE_BUSINESS_ID;
+  const [businessId] = useQueryState("businessId");
 
   // For API key, use localStorage with env var fallback
   const [apiKey, _setApiKey] = useState(() => {
@@ -197,8 +202,8 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
     _setApiKey(key);
   };
 
-  // If we're missing any required values, show the form
-  if (!apiUrl || !assistantId || !businessId) {
+  // If we're missing any required env vars, show the form
+  if (!apiUrl || !assistantId) {
     return (
       <div className="flex items-center justify-center min-h-screen w-full p-4">
         <div className="animate-in fade-in-0 zoom-in-95 flex flex-col border bg-background shadow-lg rounded-lg max-w-3xl">
@@ -206,7 +211,7 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
             <div className="flex items-start flex-col gap-2">
               <MarkyLogoSVG className="h-7" />
               <h1 className="text-xl font-semibold tracking-tight">
-                Marky Chat
+                Configuration Required
               </h1>
             </div>
             <p className="text-muted-foreground">
@@ -214,7 +219,6 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
               <ul className="list-disc list-inside mt-2">
                 <li>VITE_API_URL</li>
                 <li>VITE_ASSISTANT_ID</li>
-                <li>VITE_BUSINESS_ID</li>
                 <li>VITE_LANGSMITH_API_KEY (optional)</li>
               </ul>
             </p>
@@ -229,7 +233,7 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
       apiKey={apiKey} 
       apiUrl={apiUrl} 
       assistantId={assistantId}
-      businessId={businessId}
+      businessId={businessId ?? ""}
     >
       {children}
     </StreamSession>
