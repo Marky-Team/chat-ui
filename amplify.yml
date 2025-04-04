@@ -6,10 +6,12 @@ frontend:
         - npm install -g corepack
         - corepack enable
         - corepack prepare pnpm@latest --activate
-        - pnpm install
+        - pnpm install --no-frozen-lockfile
     build:
       commands:
-        - pnpm run build
+        - echo "Starting build..."
+        - pnpm run build --verbose
+        - echo "Build completed"
   artifacts:
     baseDirectory: dist
     files:
