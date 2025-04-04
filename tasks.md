@@ -20,7 +20,7 @@
   - Update installation instructions
   - Add social media platform integration guide
   - Document API endpoints
-- [ ] Update package.json
+- [x] Update package.json
   - Name: "@marky/chat-ui"
   - Description: "AI-powered social media marketing platform chat interface"
   - Update repository links
@@ -39,14 +39,7 @@
   - Team management endpoints
   - Analytics endpoints
 - [ ] Implement authentication
-  - User authentication
-  - Social media platform OAuth
-  - Team access management
-- [ ] Update environment variables
-  - GPT-4 API keys
-  - Social media API credentials
-  - Database configuration
-  - Service endpoints
+  - The request to backend should include the jwt token and business id in the configuration
 
 ## UI/UX Implementation
 - [ ] Update chat interface
@@ -68,6 +61,7 @@
   - Style with Marky's design system
   - Add persistence for sidebar state
   - Ensure responsive behavior on all screen sizes
+
 
 ## Testing
 - [ ] Unit tests for core features
