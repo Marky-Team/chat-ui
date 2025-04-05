@@ -1,130 +1,135 @@
 # Marky Implementation Tasks
 
-## Branding and Assets
-- [x] Update color scheme
-  - Primary color: #6366F1 (Indigo)
-  - Secondary colors: From the Marky website gradient (#818CF8, #C084FC)
-  - Accent color: #10B981 (Emerald for success states)
-- [x] Replace logo
-  - Logo URL: https://cdn.prod.website-files.com/6620ab1b53aeaac4100ec06c/66220bc94bdbbcf832f8c3db_Wordmark%20-%20Horizontal.svg
-  - Format: SVG (vector, infinitely scalable)
-  - Type: Horizontal wordmark
-- [x] Update favicon
-  - Favicon URL: https://cdn.prod.website-files.com/6620ab1b53aeaac4100ec06c/66220ad371267adf3eb8c544_Favicon.png
-  - Format: PNG
-  - Sizes: Already includes necessary sizes for favicon
+## Basic Functionality
+- Create post ideas using internet (incl trends and news and research)
+- Create captions from ideas
+- Generate from a url (blog, webpage, etc)
+  - Including scraping dynamic webpages
+- Media Gen
+  - Create graphic designs
+    - automatically search for stock photos
+    - remove background from photos
+    - use brand assets (colors, fonts, logo)
+    - edit with natural language
+  - Create infographics
+  - Create videos
+  - Create ai images with ideogram
+- user add api keys
 
-## Documentation Updates
-- [x] Update README.md
-  - Add Marky project description
-  - Update installation instructions
-  - Add social media platform integration guide
-  - Document API endpoints
-- [x] Update package.json
-  - Name: "@marky/chat-ui"
-  - Description: "AI-powered social media marketing platform chat interface"
-  - Update repository links
-  - Update author information
-- [x] Update LICENSE file
-  - Copyright holder: "© 2024 Marky. All rights reserved."
-  - License type: Proprietary Software License
 
-## Core Features Implementation
-- [x] Get user details Marky api
-  - fetch user details from DynamoDB
-  - Load user's name into agent context for personalized greetings
-
-## API and Authentication
-- [ ] Update API endpoints
-  - Content generation endpoints
-  - Social media management endpoints
-  - Team management endpoints
-  - Analytics endpoints
-- [ ] Implement authentication
-  - The request to backend should include the jwt token and business id in the configuration
-
-## UI/UX Implementation
-- [ ] Update chat interface
-  - Implement Marky's design system
-  - Add social media preview components
-    - Facebook post preview
-    - Instagram post/story preview
-    - Twitter/X post preview
-    - LinkedIn post preview
-    - Pinterest pin preview
-  - Create post editor interface
-- [ ] Add memory viewer component
-  - Use LangSmith SDK to fetch memories for user's namespace
-  - Display memories in a collapsible sidebar
-  - Add search/filter functionality for memories
-  - Show memory creation date and last accessed time
-  - Allow memory deletion with confirmation
-  - Implement memory content preview
-- [ ] Add analytics dashboard
-  - Engagement metrics
-  - Post performance
-  - Team activity
-- [ ] Implement responsive design
-  - Mobile optimization
-  - Tablet optimization
-  - Desktop optimization
+## Next TODOs
+- [ ] Add social media preview components
+- [ ] Create post editor interface
 - [ ] Add collapsible Notes sidebar
   - Create notes.md file for content
   - Add markdown rendering component
   - Implement collapse/expand functionality
-  - Style with Marky's design system
-  - Add persistence for sidebar state
-  - Ensure responsive behavior on all screen sizes
-- [ ] Implement Polotno Workspace for template preview
-  - Replace static image preview with interactive Workspace component
-  - Use `<Workspace store={store} />` for rendering
-  - Configure workspace settings:
-    - `renderOnlyActivePage` for single template view
-    - Custom `backgroundColor` and `pageBorderColor`
-    - Set appropriate `paddingX` and `paddingY`
-  - Hide page controls using `components={{ PageControls: () => null }}`
-  - Consider adding basic edit capabilities
-
-
-## Testing
-- [ ] Unit tests for core features
-- [ ] Integration tests for social media platforms
-- [ ] E2E tests for user flows
-- [ ] Performance testing
-  - Load testing for concurrent users
-  - API response times
-  - Content generation speed
-
-## Analytics and Monitoring
-- [ ] Implement analytics tracking
-  - Post engagement metrics
+- [ ] Add analytics dashboard
+  - Engagement metrics
+  - Post performance
+  - Team activity
   - User activity tracking
-  - Team performance metrics
-- [ ] Add monitoring
-  - Error tracking
-  - Performance monitoring
-  - API health checks
 
-## Security
-- [ ] Implement security measures
-  - API rate limiting
-  - Data encryption
-  - GDPR compliance
-- [ ] Add audit logging
-  - User actions
-  - System events
-  - Security events
 
-## Performance Optimization
-- [ ] Optimize content generation
-- [ ] Implement caching strategy
-- [ ] Optimize image processing
-- [ ] Minimize bundle size
+## Social Inbox Management
+- [ ] Implement unified social inbox
+  - [ ] Comments management
+    - Fetch comments from all connected platforms
+    - Real-time comment notifications
+    - Comment sentiment analysis
+    - Auto-categorize comments (question, feedback, spam)
+    - Batch comment actions (approve, hide, delete)
+    - Comment history and thread view
+  - [ ] Direct messages handling
+    - Unified DM inbox across platforms
+    - Real-time message notifications
+    - Conversation threading
+    - Message status tracking (read, replied)
+    - Quick reply templates
+    - Automated response suggestions
+  - [ ] Response management
+    - AI-assisted response generation
+    - Response tone and style customization
+    - Response templates library
+    - Response approval workflow
+    - Schedule delayed responses
+    - Cross-platform response tracking
+  - [ ] Team collaboration
+    - Assign conversations to team members
+    - Internal notes on conversations
+    - Team member mentions
+    - Shared response templates
+    - Activity logs and analytics
+  - [ ] Analytics and reporting
+    - Response time metrics
+    - Engagement statistics
+    - Team performance metrics
+    - Custom report generation
+    - Automated weekly/monthly reports
 
-## Documentation
-- [ ] Create API documentation
-- [ ] Write user guide
-- [ ] Create team onboarding guide
-- [ ] Document white-label setup (Agency tier)
+## Prompt Engineering Tools
+- [ ] Implement prompt version control system
+  - [ ] Create prompt forking functionality
+    - Fork system prompt to user workspace
+    - Track fork lineage and relationships
+    - Handle merge conflicts
+  - [ ] Add diff comparison view
+    - Side-by-side diff visualization
+    - Highlight changes (additions, deletions, modifications)
+    - Show metadata changes
+  - [ ] Implement commit system
+    - Capture author information
+    - Require commit messages
+    - Generate and store commit hashes
+    - Track commit history
+  - [ ] Add prompt version selector
+    - Switch between latest version and specific commits
+    - Preview prompt content before selection
+    - Show commit metadata
+  - [ ] Implement fork synchronization
+    - Detect upstream changes
+    - Show diff comparison with current fork
+    - Allow selective change acceptance
+    - Auto-merge non-conflicting changes
+    - Create commit for accepted changes
 
-Please provide any missing information marked with "Need:" to complete the implementation tasks. 
+- [ ] Create interactive prompt builder
+  - [ ] Variable management system
+    - Fetch available variables from API
+    - Store variable metadata and descriptions
+    - Cache example usage from dataset
+  - [ ] Implement drag-and-drop interface
+    - Variable sidebar with search/filter
+    - Drag targets in prompt editor
+    - Syntax highlighting for variables
+    - Variable tooltips with descriptions and examples
+  - [ ] Add dataset integration
+    - Fetch example datasets from backend API
+    - Allow dataset filtering and sampling
+    - Cache dataset locally for quick testing
+  - [ ] Create prompt testing interface
+    - Run single prompt against dataset
+    - Run A/B comparison of two prompts
+    - Show side-by-side output comparison
+    - Calculate and display metrics
+    - Export test results
+
+- [ ] Implement auto-tune system
+  - [ ] Add auto-tune toggle in settings
+    - Enable/disable auto-tune feature
+    - Configure auto-tune sensitivity
+    - Set feedback threshold for tuning
+  - [ ] Create feedback collection system
+    - Track user feedback on responses
+    - Aggregate feedback metrics
+    - Identify patterns in negative feedback
+  - [ ] Implement tune-prompt integration
+    - Call tune-prompt tool based on feedback
+    - Generate prompt improvements
+    - Show proposed changes in diff tool
+  - [ ] Add review interface for auto-tuned prompts
+    - Display before/after comparison
+    - Highlight key changes
+    - Show expected impact metrics
+    - Allow accept/reject decisions
+    - Auto-commit accepted changes
