@@ -14,7 +14,9 @@
   - Create infographics
   - Create videos
   - Create ai images with ideogram
-- user add api keys
+- User add api keys (BYOK)
+- User can edit system prompts
+- Bulk scheduling
 
 
 ## Next TODOs

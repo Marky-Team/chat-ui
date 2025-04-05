@@ -24,3 +24,9 @@ dist-ssr
 # LangGraph API
 .langgraph_api
 .env
+
+# CDK
+cdk.out/
+.cdk.staging/
+cdk-outputs.json
+**/cdk.context.json
