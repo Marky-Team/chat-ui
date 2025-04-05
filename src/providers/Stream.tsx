@@ -18,7 +18,12 @@ import React, {
 import { toast } from "sonner";
 import { useThreads } from "./Thread";
 
-export type StateType = { messages: Message[]; ui?: UIMessage[] };
+export type StateType = {
+  messages: Message[];
+  ui?: UIMessage[];
+  current_agent?: "manny" | "kayla";
+  next_available_options?: string[];
+};
 
 const useTypedStream = useStream<
   StateType,
@@ -26,6 +31,8 @@ const useTypedStream = useStream<
     UpdateType: {
       messages?: Message[] | Message | string;
       ui?: (UIMessage | RemoveUIMessage)[] | UIMessage | RemoveUIMessage;
+      current_agent?: "manny" | "kayla";
+      next_available_options?: string[];
     };
     CustomEventType: UIMessage | RemoveUIMessage;
   }
