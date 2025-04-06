@@ -1,0 +1,71 @@
+name: Deploy
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+# Ensure we don't have multiple deployments running at once
+concurrency:
+  group: "deploy"
+  cancel-in-progress: false
+
+permissions:
+  id-token: write # Required for AWS OIDC
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to AWS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Set up Node.js and pnpm for React app
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.5.1+sha512.c424c076bd25c1a5b188c37bb1ca56cc1e136fbf530d98bcb3289982a08fd25527b8c9c4ec113be5e3393c39af04521dd647bcf1d0801eaf8ac6a7b14da313af
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18.x"
+          cache: "pnpm"
+
+      # Set up Python with uv for CDK
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/uv
+            .venv
+          key: ${{ runner.os }}-uv-${{ hashFiles('**/pyproject.toml') }}-${{ hashFiles('**/uv.lock') }}
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          uv venv
+
+      # Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      # Install dependencies
+      - name: Install frontend dependencies
+        run: pnpm install
+      - name: Install CDK dependencies
+        working-directory: infra
+        run: |
+          source .venv/bin/activate
+          uv pip install -r requirements.txt
+
+      # Build and deploy
+      - name: Build React app
+        run: pnpm build
+      - name: Deploy to AWS
+        working-directory: infra
+        run: |
+          source .venv/bin/activate
+          python deploy.py 
