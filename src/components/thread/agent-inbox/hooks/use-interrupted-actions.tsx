@@ -1,18 +1,19 @@
-import { HumanResponseWithEdits, SubmitType } from "../types";
-import {
-  KeyboardEvent,
-  Dispatch,
-  SetStateAction,
-  MutableRefObject,
-  useState,
-  useRef,
-  useEffect,
-} from "react";
-import { createDefaultHumanResponse } from "../utils";
-import { toast } from "sonner";
+import { useStreamContext } from "@/providers/Stream";
 import { HumanInterrupt, HumanResponse } from "@langchain/langgraph/prebuilt";
 import { END } from "@langchain/langgraph/web";
-import { useStreamContext } from "@/providers/Stream";
+import { useQueryState } from "nuqs";
+import {
+    Dispatch,
+    KeyboardEvent,
+    MutableRefObject,
+    SetStateAction,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
+import { toast } from "sonner";
+import { HumanResponseWithEdits, SubmitType } from "../types";
+import { createDefaultHumanResponse } from "../utils";
 
 interface UseInterruptedActionsInput {
   interrupt: HumanInterrupt;
@@ -54,6 +55,8 @@ export default function useInterruptedActions({
   interrupt,
 }: UseInterruptedActionsInput): UseInterruptedActionsValue {
   const thread = useStreamContext();
+  const [businessId] = useQueryState("businessId");
+  const [token] = useQueryState("token");
   const [humanResponse, setHumanResponse] = useState<HumanResponseWithEdits[]>(
     [],
   );
@@ -81,9 +84,22 @@ export default function useInterruptedActions({
   }, [interrupt]);
 
   const resumeRun = (response: HumanResponse[]): boolean => {
+    if (!businessId || !token) {
+      toast.error("Error", {
+        description: "Missing businessId or token.",
+        duration: 5000,
+        richColors: true,
+        closeButton: true,
+      });
+      return false;
+    }
+
     try {
       thread.submit(
-        {},
+        {
+          businessId,
+          token
+        },
         {
           command: {
             resume: response,
@@ -104,6 +120,16 @@ export default function useInterruptedActions({
     if (!humanResponse) {
       toast.error("Error", {
         description: "Please enter a response.",
+        duration: 5000,
+        richColors: true,
+        closeButton: true,
+      });
+      return;
+    }
+
+    if (!businessId || !token) {
+      toast.error("Error", {
+        description: "Missing businessId or token.",
         duration: 5000,
         richColors: true,
         closeButton: true,
@@ -233,6 +259,16 @@ export default function useInterruptedActions({
       return;
     }
 
+    if (!businessId || !token) {
+      toast.error("Error", {
+        description: "Missing businessId or token.",
+        duration: 5000,
+        richColors: true,
+        closeButton: true,
+      });
+      return;
+    }
+
     setLoading(true);
     initialHumanInterruptEditValue.current = {};
 
@@ -244,21 +280,28 @@ export default function useInterruptedActions({
     });
   };
 
-  const handleResolve = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
+  const handleResolve = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
+    
+    if (!businessId || !token) {
+      toast.error("Error", {
+        description: "Missing businessId or token.",
+        duration: 5000,
+        richColors: true,
+        closeButton: true,
+      });
+      return;
+    }
 
     setLoading(true);
-    initialHumanInterruptEditValue.current = {};
-
     try {
       thread.submit(
-        {},
         {
-          command: {
-            goto: END,
-          },
+          businessId,
+          token
+        },
+        {
+          command: { goto: END },
         },
       );
 
@@ -274,9 +317,9 @@ export default function useInterruptedActions({
         closeButton: true,
         duration: 3000,
       });
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const supportsMultipleMethods =

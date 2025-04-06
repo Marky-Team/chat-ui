@@ -20,13 +20,18 @@ import { useThreads } from "./Thread";
 
 export type StateType = { messages: Message[]; ui?: UIMessage[] };
 
+// Add custom input type that includes businessId and token
+type CustomInput = {
+  messages?: string | Message | Message[];
+  ui?: UIMessage | RemoveUIMessage | (UIMessage | RemoveUIMessage)[];
+  businessId: string;
+  token: string;
+};
+
 const useTypedStream = useStream<
   StateType,
   {
-    UpdateType: {
-      messages?: Message[] | Message | string;
-      ui?: (UIMessage | RemoveUIMessage)[] | UIMessage | RemoveUIMessage;
-    };
+    UpdateType: CustomInput
     CustomEventType: UIMessage | RemoveUIMessage;
   }
 >;
@@ -100,9 +105,7 @@ const StreamSession = ({
   const streamValue = useTypedStream({
     apiUrl,
     apiKey: apiKey ?? undefined,
-    defaultHeaders: {
-      "Authorization": `Bearer ${token} ${businessId}`,
-    },
+    defaultHeaders: {},  // Can add auth headers here if needed
     assistantId,
     threadId: threadId ?? null,
     onCustomEvent: (event, options) => {
@@ -151,9 +154,13 @@ const StreamSession = ({
 
   // Send automatic hello message when component mounts (only if no existing thread)
   useEffect(() => {
-    if (!hasInitialized && streamValue.submit && !isLoadingHistory && !threadId) {
+    if (!hasInitialized && streamValue.submit && !isLoadingHistory && !threadId && token) {
       streamValue.submit(
-        { messages: "hello" },
+        { 
+          messages: "hello",
+          businessId,
+          token
+        },
         { 
           streamMode: ["values"],
           optimisticValues: (prev) => ({
@@ -164,7 +171,7 @@ const StreamSession = ({
       );
       setHasInitialized(true);
     }
-  }, [hasInitialized, streamValue, isLoadingHistory, threadId]);
+  }, [hasInitialized, streamValue, isLoadingHistory, threadId, businessId, token]);
 
   // Show popup if token or businessId is missing
   if (!token) {

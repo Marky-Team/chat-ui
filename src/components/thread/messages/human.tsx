@@ -2,6 +2,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { useStreamContext } from "@/providers/Stream";
 import { Message } from "@langchain/langgraph-sdk";
+import { useQueryState } from "nuqs";
 import { useState } from "react";
 import { getContentString } from "../utils";
 import { BranchSwitcher, CommandBar } from "./shared";
@@ -42,17 +43,24 @@ export function HumanMessage({
   const thread = useStreamContext();
   const meta = thread.getMessagesMetadata(message);
   const parentCheckpoint = meta?.firstSeenState?.parent_checkpoint;
+  const [businessId] = useQueryState("businessId");
+  const [token] = useQueryState("token");
 
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState("");
   const contentString = getContentString(message.content);
 
   const handleSubmitEdit = () => {
+    if (!businessId || !token) return;
     setIsEditing(false);
 
     const newMessage: Message = { type: "human", content: value };
     thread.submit(
-      { messages: [newMessage] },
+      { 
+        messages: [newMessage],
+        businessId,
+        token
+      },
       {
         checkpoint: parentCheckpoint,
         streamMode: ["values"],
@@ -65,7 +73,7 @@ export function HumanMessage({
             messages: [...(values.messages ?? []), newMessage],
           };
         },
-        },
+      },
     );
   };
 

@@ -97,6 +97,8 @@ function OpenGitHubRepo() {
 
 export function Thread() {
   const [threadId, setThreadId] = useQueryState("threadId");
+  const [businessId] = useQueryState("businessId");
+  const [token] = useQueryState("token");
   const [chatHistoryOpen, setChatHistoryOpen] = useQueryState(
     "chatHistoryOpen",
     parseAsBoolean.withDefault(false),
@@ -159,7 +161,7 @@ export function Thread() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading || !businessId || !token) return;
     setFirstTokenReceived(false);
 
     const newHumanMessage: Message = {
@@ -170,7 +172,11 @@ export function Thread() {
 
     const toolMessages = ensureToolCallsHaveResponses(stream.messages);
     stream.submit(
-      { messages: [...toolMessages, newHumanMessage] },
+      { 
+        messages: [...toolMessages, newHumanMessage],
+        businessId,
+        token
+      },
       {
         streamMode: ["values"],
         optimisticValues: (prev) => ({
@@ -190,13 +196,20 @@ export function Thread() {
   const handleRegenerate = (
     parentCheckpoint: Checkpoint | null | undefined,
   ) => {
+    if (!businessId || !token) return;
     // Do this so the loading state is correct
     prevMessageLength.current = prevMessageLength.current - 1;
     setFirstTokenReceived(false);
-    stream.submit(undefined, {
-      checkpoint: parentCheckpoint,
-      streamMode: ["values"],
-    });
+    stream.submit(
+      {
+        businessId,
+        token
+      },
+      {
+        checkpoint: parentCheckpoint,
+        streamMode: ["values"],
+      }
+    );
   };
 
   const chatStarted = !!threadId || !!messages.length;
