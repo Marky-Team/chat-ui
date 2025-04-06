@@ -13,27 +13,7 @@ npm run dev
 ```
 
 ## Tech Stack
-- Next.js 14
+- React
 - TypeScript
 - TailwindCSS
-
-## Project Structure
-```
-chat-ui/
-├── app/              # Next.js app routes
-├── components/       # UI components
-├── lib/             # Utilities
-└── public/          # Static assets
-```
-
-## Environment Variables
-Create `.env` file:
-```env
-OPENAI_API_KEY=
-MARKY_API_KEY=
-```
-
-## Notes
-- All commits must follow [Conventional Commits](https://www.conventionalcommits.org/)
-- Run `npm run lint` before committing
-- Add tests for new features
+- Langgraph

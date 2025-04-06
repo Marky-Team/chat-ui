@@ -1,8 +1,8 @@
 import { BaseMessage, isBaseMessage } from "@langchain/core/messages";
+import { HumanInterrupt } from "@langchain/langgraph/prebuilt";
 import { format } from "date-fns";
 import { startCase } from "lodash";
 import { HumanResponseWithEdits, SubmitType } from "./types";
-import { HumanInterrupt } from "@langchain/langgraph/prebuilt";
 
 export function prettifyText(action: string) {
   return startCase(action.replace(/_/g, " "));
@@ -75,7 +75,7 @@ export function unknownToPrettyDate(input: unknown): string | undefined {
     ) {
       return format(new Date(input as string), "MM/dd/yyyy hh:mm a");
     }
-  } catch (_) {
+  } catch {
     // failed to parse date. no-op
   }
   return undefined;

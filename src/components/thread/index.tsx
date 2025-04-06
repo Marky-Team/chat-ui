@@ -1,39 +1,38 @@
-import { v4 as uuidv4 } from "uuid";
-import { ReactNode, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import {
+    DO_NOT_RENDER_ID_PREFIX,
+    ensureToolCallsHaveResponses,
+} from "@/lib/ensure-tool-responses";
 import { cn } from "@/lib/utils";
 import { useStreamContext } from "@/providers/Stream";
-import { useState, FormEvent } from "react";
-import { Button } from "../ui/button";
 import { Checkpoint, Message } from "@langchain/langgraph-sdk";
-import { AssistantMessage, AssistantMessageLoading } from "./messages/ai";
-import { HumanMessage } from "./messages/human";
+import { motion } from "framer-motion";
 import {
-  DO_NOT_RENDER_ID_PREFIX,
-  ensureToolCallsHaveResponses,
-} from "@/lib/ensure-tool-responses";
-import { TooltipIconButton } from "./tooltip-icon-button";
-import {
-  ArrowDown,
-  LoaderCircle,
-  PanelRightOpen,
-  PanelRightClose,
-  SquarePen,
+    ArrowDown,
+    LoaderCircle,
+    PanelRightClose,
+    PanelRightOpen,
+    SquarePen,
 } from "lucide-react";
-import { useQueryState, parseAsBoolean } from "nuqs";
-import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
-import ThreadHistory from "./history";
+import { parseAsBoolean, useQueryState } from "nuqs";
+import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
+import { v4 as uuidv4 } from "uuid";
+import { MarkyLogoSVG } from "../icons/marky";
+import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
-import { MarkyLogoSVG } from "../icons/marky";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
 } from "../ui/tooltip";
+import ThreadHistory from "./history";
+import { AssistantMessage, AssistantMessageLoading } from "./messages/ai";
+import { HumanMessage } from "./messages/human";
+import { TooltipIconButton } from "./tooltip-icon-button";
 
 function StickyToBottomContent(props: {
   content: ReactNode;
@@ -85,7 +84,7 @@ function OpenGitHubRepo() {
             className="flex items-center gap-2 px-3 py-1 transition-colors rounded-lg text-muted-foreground hover:text-foreground"
           >
             <MarkyLogoSVG width={32} height={32} />
-            <span className="font-medium">Marky Chat</span>
+            <span className="font-medium">Chat</span>
           </a>
         </TooltipTrigger>
         <TooltipContent side="left">
@@ -298,9 +297,6 @@ export function Thread() {
                 }}
               >
                 <MarkyLogoSVG width={32} height={32} />
-                <span className="text-xl font-semibold tracking-tight">
-                  Marky Chat
-                </span>
               </motion.button>
             </div>
 
@@ -361,9 +357,6 @@ export function Thread() {
                 {!chatStarted && (
                   <div className="flex gap-3 items-center">
                     <MarkyLogoSVG className="flex-shrink-0 h-8" />
-                    <h1 className="text-2xl font-semibold tracking-tight">
-                      Marky Chat
-                    </h1>
                   </div>
                 )}
 

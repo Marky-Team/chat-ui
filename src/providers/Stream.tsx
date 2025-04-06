@@ -97,16 +97,6 @@ const StreamSession = ({
   const [hasInitialized, setHasInitialized] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
 
-  // Show popup if token is missing
-  if (!token) {
-    return <AuthRequiredPopup message="The URL should include a token parameter for authentication." />;
-  }
-
-  // Show popup if businessId is missing
-  if (!businessId) {
-    return <AuthRequiredPopup message="The URL should include a businessId parameter." />;
-  }
-
   const streamValue = useTypedStream({
     apiUrl,
     apiKey: apiKey ?? undefined,
@@ -138,25 +128,9 @@ const StreamSession = ({
     } else {
       setIsLoadingHistory(false);
     }
-  }, [threadId, getThreads]);
+  }, [threadId, getThreads, setThreads]);
 
-  // Send automatic hello message when component mounts (only if no existing thread)
-  useEffect(() => {
-    if (!hasInitialized && streamValue.submit && !isLoadingHistory && !threadId) {
-      streamValue.submit(
-        { messages: "hello" },
-        { 
-          streamMode: ["values"],
-          optimisticValues: (prev) => ({
-            ...prev,
-            messages: [...(prev.messages ?? []), { type: "human", content: "hello" }],
-          }),
-        }
-      );
-      setHasInitialized(true);
-    }
-  }, [hasInitialized, streamValue.submit, isLoadingHistory, threadId]);
-
+  // Check graph status
   useEffect(() => {
     checkGraphStatus(apiUrl, apiKey).then((ok) => {
       if (!ok) {
@@ -175,6 +149,32 @@ const StreamSession = ({
     });
   }, [apiKey, apiUrl]);
 
+  // Send automatic hello message when component mounts (only if no existing thread)
+  useEffect(() => {
+    if (!hasInitialized && streamValue.submit && !isLoadingHistory && !threadId) {
+      streamValue.submit(
+        { messages: "hello" },
+        { 
+          streamMode: ["values"],
+          optimisticValues: (prev) => ({
+            ...prev,
+            messages: [...(prev.messages ?? []), { type: "human", content: "hello" }],
+          }),
+        }
+      );
+      setHasInitialized(true);
+    }
+  }, [hasInitialized, streamValue, isLoadingHistory, threadId]);
+
+  // Show popup if token or businessId is missing
+  if (!token) {
+    return <AuthRequiredPopup message="The URL should include a token parameter for authentication." />;
+  }
+
+  if (!businessId) {
+    return <AuthRequiredPopup message="The URL should include a businessId parameter." />;
+  }
+
   return (
     <StreamContext.Provider value={streamValue}>
       {children}
@@ -192,15 +192,10 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
   const [businessId] = useQueryState("businessId");
 
   // For API key, use localStorage with env var fallback
-  const [apiKey, _setApiKey] = useState(() => {
+  const [apiKey] = useState(() => {
     const storedKey = getApiKey();
     return storedKey || envApiKey || "";
   });
-
-  const setApiKey = (key: string) => {
-    window.localStorage.setItem("lg:chat:apiKey", key);
-    _setApiKey(key);
-  };
 
   // If we're missing any required env vars, show the form
   if (!apiUrl || !assistantId) {
