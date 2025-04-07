@@ -23,12 +23,6 @@ import { MarkyLogoSVG } from "../icons/marky";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
 import ThreadHistory from "./history";
 import { AssistantMessage, AssistantMessageLoading } from "./messages/ai";
 import { HumanMessage } from "./messages/human";
@@ -69,29 +63,6 @@ function ScrollToBottom(props: { className?: string }) {
       <ArrowDown className="w-4 h-4" />
       <span>Scroll to bottom</span>
     </Button>
-  );
-}
-
-function OpenGitHubRepo() {
-  return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <a
-            href="https://marky.ai"
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-2 px-3 py-1 transition-colors rounded-lg text-muted-foreground hover:text-foreground"
-          >
-            <MarkyLogoSVG width={32} height={32} />
-            <span className="font-medium">Chat</span>
-          </a>
-        </TooltipTrigger>
-        <TooltipContent side="left">
-          <p>Open GitHub repo</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
   );
 }
 
@@ -261,9 +232,6 @@ export function Thread() {
                 </Button>
               )}
             </div>
-            <div className="absolute top-2 right-4 flex items-center">
-              <OpenGitHubRepo />
-            </div>
           </div>
         )}
         {chatStarted && (
@@ -301,9 +269,6 @@ export function Thread() {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="flex items-center">
-                <OpenGitHubRepo />
-              </div>
               <TooltipIconButton
                 size="lg"
                 className="p-4"
