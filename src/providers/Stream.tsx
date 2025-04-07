@@ -3,17 +3,17 @@ import { getApiKey } from "@/lib/api-key";
 import { type Message } from "@langchain/langgraph-sdk";
 import { useStream } from "@langchain/langgraph-sdk/react";
 import {
-    uiMessageReducer,
-    type RemoveUIMessage,
-    type UIMessage,
+  uiMessageReducer,
+  type RemoveUIMessage,
+  type UIMessage,
 } from "@langchain/langgraph-sdk/react-ui";
 import { useQueryState } from "nuqs";
 import React, {
-    createContext,
-    ReactNode,
-    useContext,
-    useEffect,
-    useState,
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
 } from "react";
 import { toast } from "sonner";
 import { useThreads } from "./Thread";
@@ -47,7 +47,8 @@ const AuthRequiredPopup: React.FC<{ message: string }> = ({ message }) => (
         <p className="text-muted-foreground">
           {message}
           <br />
-          Please close this page and re-open from Marky to get a properly authenticated URL.
+          Please close this page and re-open from Marky to get a properly
+          authenticated URL.
         </p>
       </div>
     </div>
@@ -101,7 +102,7 @@ const StreamSession = ({
     apiUrl,
     apiKey: apiKey ?? undefined,
     defaultHeaders: {
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       "X-Brand-Id": businessId,
     },
     assistantId,
@@ -152,16 +153,24 @@ const StreamSession = ({
 
   // Send automatic hello message when component mounts (only if no existing thread)
   useEffect(() => {
-    if (!hasInitialized && streamValue.submit && !isLoadingHistory && !threadId) {
+    if (
+      !hasInitialized &&
+      streamValue.submit &&
+      !isLoadingHistory &&
+      !threadId
+    ) {
       streamValue.submit(
         { messages: "hello" },
-        { 
+        {
           streamMode: ["values"],
           optimisticValues: (prev) => ({
             ...prev,
-            messages: [...(prev.messages ?? []), { type: "human", content: "hello" }],
+            messages: [
+              ...(prev.messages ?? []),
+              { type: "human", content: "hello" },
+            ],
           }),
-        }
+        },
       );
       setHasInitialized(true);
     }
@@ -169,11 +178,15 @@ const StreamSession = ({
 
   // Show popup if token or businessId is missing
   if (!token) {
-    return <AuthRequiredPopup message="The URL should include a token parameter for authentication." />;
+    return (
+      <AuthRequiredPopup message="The URL should include a token parameter for authentication." />
+    );
   }
 
   if (!businessId) {
-    return <AuthRequiredPopup message="The URL should include a businessId parameter." />;
+    return (
+      <AuthRequiredPopup message="The URL should include a businessId parameter." />
+    );
   }
 
   return (
@@ -211,11 +224,11 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
               </h1>
             </div>
             <p className="text-muted-foreground">
-              Please set up the required environment variables in your .env file:
+              The required environment variables are not configured:
               <ul className="list-disc list-inside mt-2">
                 <li>VITE_API_URL</li>
                 <li>VITE_ASSISTANT_ID</li>
-                <li>VITE_LANGSMITH_API_KEY (optional)</li>
+                <li>VITE_LANGSMITH_API_KEY</li>
               </ul>
             </p>
           </div>
@@ -225,9 +238,9 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
   }
 
   return (
-    <StreamSession 
-      apiKey={apiKey} 
-      apiUrl={apiUrl} 
+    <StreamSession
+      apiKey={apiKey}
+      apiUrl={apiUrl}
       assistantId={assistantId}
       businessId={businessId ?? ""}
     >

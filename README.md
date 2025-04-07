@@ -13,6 +13,7 @@ npm run dev
 ```
 
 ## Tech Stack
+
 - React
 - TypeScript
 - TailwindCSS

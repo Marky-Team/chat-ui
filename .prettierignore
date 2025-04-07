@@ -1,0 +1,19 @@
+# Python virtual environments
+.venv/
+venv/
+
+# Dependencies
+node_modules/
+dist/
+
+# Build outputs
+build/
+coverage/
+
+# Cache
+.cache/
+__pycache__/
+*.pyc
+
+# Environment files
+.env* 

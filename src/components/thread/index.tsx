@@ -1,18 +1,18 @@
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import {
-    DO_NOT_RENDER_ID_PREFIX,
-    ensureToolCallsHaveResponses,
+  DO_NOT_RENDER_ID_PREFIX,
+  ensureToolCallsHaveResponses,
 } from "@/lib/ensure-tool-responses";
 import { cn } from "@/lib/utils";
 import { useStreamContext } from "@/providers/Stream";
 import { Checkpoint, Message } from "@langchain/langgraph-sdk";
 import { motion } from "framer-motion";
 import {
-    ArrowDown,
-    LoaderCircle,
-    PanelRightClose,
-    PanelRightOpen,
-    SquarePen,
+  ArrowDown,
+  LoaderCircle,
+  PanelRightClose,
+  PanelRightOpen,
+  SquarePen,
 } from "lucide-react";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
@@ -24,10 +24,10 @@ import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from "../ui/tooltip";
 import ThreadHistory from "./history";
 import { AssistantMessage, AssistantMessageLoading } from "./messages/ai";

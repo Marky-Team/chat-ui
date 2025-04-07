@@ -9,4 +9,6 @@ export interface ThreadContextType {
   setThreadsLoading: Dispatch<SetStateAction<boolean>>;
 }
 
-export const ThreadContext = createContext<ThreadContextType | undefined>(undefined); 
+export const ThreadContext = createContext<ThreadContextType | undefined>(
+  undefined,
+);

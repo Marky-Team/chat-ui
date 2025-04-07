@@ -72,4 +72,4 @@ jobs:
         working-directory: infra
         run: |
           source .venv/bin/activate
-          python deploy.py 
+          python deploy.py

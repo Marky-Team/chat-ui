@@ -65,7 +65,7 @@ export function HumanMessage({
             messages: [...(values.messages ?? []), newMessage],
           };
         },
-        },
+      },
     );
   };
 

@@ -7,4 +7,4 @@ export function useThreads(): ThreadContextType {
     throw new Error("useThreads must be used within a ThreadProvider");
   }
   return context;
-} 
+}

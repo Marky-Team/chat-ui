@@ -1,6 +1,7 @@
 # Marky Implementation Tasks
 
 ## Basic Functionality
+
 - Create post ideas using internet (incl trends and news and research)
 - Create captions from ideas
 - Generate from a url (blog, webpage, etc)
@@ -18,8 +19,8 @@
 - User can edit system prompts
 - Bulk scheduling
 
-
 ## Next TODOs
+
 - [ ] Add social media preview components
 - [ ] Create post editor interface
 - [ ] Add collapsible Notes sidebar
@@ -32,8 +33,8 @@
   - Team activity
   - User activity tracking
 
-
 ## Social Inbox Management
+
 - [ ] Implement unified social inbox
   - [ ] Comments management
     - Fetch comments from all connected platforms
@@ -70,7 +71,9 @@
     - Automated weekly/monthly reports
 
 ## Prompt Engineering Tools
+
 - [ ] Implement prompt version control system
+
   - [ ] Create prompt forking functionality
     - Fork system prompt to user workspace
     - Track fork lineage and relationships
@@ -96,6 +99,7 @@
     - Create commit for accepted changes
 
 - [ ] Create interactive prompt builder
+
   - [ ] Variable management system
     - Fetch available variables from API
     - Store variable metadata and descriptions

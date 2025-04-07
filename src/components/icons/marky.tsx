@@ -24,4 +24,4 @@ export function MarkyLogoSVG(props: SVGProps<SVGSVGElement>) {
       />
     </svg>
   );
-} 
+}

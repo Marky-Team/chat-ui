@@ -1,0 +1,26 @@
+repos:
+  - repo: local
+    hooks:
+      - id: format-check
+        name: Check formatting
+        entry: pnpm format:check
+        language: system
+        pass_filenames: false
+        types: [file]
+        files: \.(js|jsx|ts|tsx)$
+
+      - id: lint
+        name: Check linting
+        entry: pnpm lint
+        language: system
+        pass_filenames: false
+        types: [file]
+        files: \.(js|jsx|ts|tsx)$
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.6
+    hooks:
+      - id: codespell
+        name: Check README spelling
+        files: README\.md
+        additional_dependencies: []

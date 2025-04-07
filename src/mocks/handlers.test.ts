@@ -4,14 +4,17 @@ describe("Message Exchange", () => {
   // Increase timeout to 10 seconds
   it("should handle user message and stream assistant response", async () => {
     // Send user message
-    const userResponse = await fetch("https://api.example.com/api/threads/thread_1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        role: "user",
-        content: "hello",
-      }),
-    });
+    const userResponse = await fetch(
+      "https://api.example.com/api/threads/thread_1/messages",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          role: "user",
+          content: "hello",
+        }),
+      },
+    );
 
     expect(userResponse.ok).toBe(true);
     const userMessage = await userResponse.json();
@@ -22,14 +25,17 @@ describe("Message Exchange", () => {
     });
 
     // Send assistant message and test streaming
-    const assistantResponse = await fetch("https://api.example.com/api/threads/thread_1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        role: "assistant",
-        content: "hi there",
-      }),
-    });
+    const assistantResponse = await fetch(
+      "https://api.example.com/api/threads/thread_1/messages",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          role: "assistant",
+          content: "hi there",
+        }),
+      },
+    );
 
     expect(assistantResponse.ok).toBe(true);
     expect(assistantResponse.headers.get("Content-Type")).toBe(
@@ -54,9 +60,9 @@ describe("Message Exchange", () => {
 
     // Verify that we received streaming chunks
     expect(chunks.length).toBeGreaterThan(0);
-    
+
     // Each chunk should be in SSE format: data: {"content": "..."}\n\n
     const firstChunk = chunks[0];
     expect(firstChunk).toMatch(/^data: {"content":.*}\n\n$/);
   }, 10000); // 10 second timeout
-}); 
+});

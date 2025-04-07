@@ -8,4 +8,4 @@ export function getThreadSearchMetadata(
   } else {
     return { graph_id: assistantId };
   }
-} 
+}

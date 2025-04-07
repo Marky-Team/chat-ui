@@ -11,4 +11,4 @@ async function main() {
   console.log("✅ MSW service worker initialized");
 }
 
-main().catch(console.error); 
+main().catch(console.error);

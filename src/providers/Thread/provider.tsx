@@ -1,11 +1,7 @@
 import { getApiKey } from "@/lib/api-key";
 import { Thread } from "@langchain/langgraph-sdk";
 import { useQueryState } from "nuqs";
-import {
-    ReactNode,
-    useCallback,
-    useState,
-} from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { createClient } from "../client";
 import { ThreadContext } from "./context";
 import { getThreadSearchMetadata } from "./utils";
@@ -41,4 +37,4 @@ export function ThreadProvider({ children }: { children: ReactNode }) {
   return (
     <ThreadContext.Provider value={value}>{children}</ThreadContext.Provider>
   );
-} 
+}
