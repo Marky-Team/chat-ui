@@ -63,6 +63,10 @@ jobs:
 
       # Build and deploy
       - name: Build React app
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_ASSISTANT_ID: ${{ secrets.VITE_ASSISTANT_ID }}
+          VITE_LANGSMITH_API_KEY: ${{ secrets.VITE_LANGSMITH_API_KEY }}
         run: pnpm build
       - name: Deploy to AWS
         working-directory: infra

@@ -101,7 +101,8 @@ const StreamSession = ({
     apiUrl,
     apiKey: apiKey ?? undefined,
     defaultHeaders: {
-      "Authorization": `Bearer ${token} ${businessId}`,
+      "Authorization": `Bearer ${token}`,
+      "X-Brand-Id": businessId,
     },
     assistantId,
     threadId: threadId ?? null,
